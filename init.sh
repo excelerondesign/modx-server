@@ -53,10 +53,10 @@ else
         PROJECT_URL=$(if [$REPLY = '']; then $PROJECT_URL; else $REPLY; fi)
         echo $PROJECT_URL
         # create custom .env file
-        cat >.env <<EOF
-        PROJECT_NAME=$PROJECT_NAME
-        PROJECT_URL=$PROJECT_URL
-        EOF
+        ENV_PATH='../.env'
+        > $ENV_PATH
+        echo "PROJECT_NAME=${PROJECT_NAME}" >> $ENV_PATH
+
     else
         echo -e "${ORANGE}Copying the sample-file to '../.env'"
         echo
