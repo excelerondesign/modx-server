@@ -40,12 +40,31 @@ then
 	echo -e "${GREEN}'../.env' found"
 else
     echo -e "${ORANGE}'../.env' not found"
-    echo -e "${ORANGE}Copying the sample-file to '../.env'"
+    echo -e "${GREEN}"
+    read -p "Generate custom? " -n 1 -r
     echo
-    echo -e "${RED}Before continuing you should customize '../.env'"
-    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo
+        read -p "Project Name: " PROJECT_NAME
+        PROJECT_URL="$(echo $PROJECT_NAME | tr '[:upper:]' '[:lower:]').local"
+        echo
+        read -p "Project URL: (${PROJECT_URL}) "
+        PROJECT_URL=$(if [$REPLY = '']; then $PROJECT_URL; else $REPLY; fi)
+        echo $PROJECT_URL
+        # create custom .env file
+        cat >.env <<EOF
+        PROJECT_NAME=$PROJECT_NAME
+        PROJECT_URL=$PROJECT_URL
+        EOF
+    else
+        echo -e "${ORANGE}Copying the sample-file to '../.env'"
+        echo
+        echo -e "${RED}Before continuing you should customize '../.env'"
+        echo
 
-    cp .env.example ../.env
+        cp .env.example ../.env
+    fi
 fi
 
 echo
