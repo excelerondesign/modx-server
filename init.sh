@@ -50,12 +50,12 @@ else
         PROJECT_URL="$(echo $PROJECT_NAME | tr '[:upper:]' '[:lower:]').local"
         echo
         read -p "Project URL: (${PROJECT_URL}) "
-        PROJECT_URL=$(if [$REPLY = '']; then $PROJECT_URL; else $REPLY; fi)
+        if [ $REPLY != '' ]; then PROJECT_URL=$REPLY; fi;
         echo $PROJECT_URL
         # create custom .env file
-        ENV_PATH='../.env'
-        > $ENV_PATH
-        echo "PROJECT_NAME=${PROJECT_NAME}" >> $ENV_PATH
+        # > ../.env
+        # echo "PROJECT_NAME=${PROJECT_NAME}" >> ../.env
+        # echo "PROJECT_URL=${PROJECT_URL}" >> ../.env
 
     else
         echo -e "${ORANGE}Copying the sample-file to '../.env'"
