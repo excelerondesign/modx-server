@@ -40,23 +40,64 @@ then
 	echo -e "${GREEN}'../.env' found"
 else
     echo -e "${ORANGE}'../.env' not found"
-    echo -e "${GREEN}"
+    echo -e "${NC}"
+    echo
     read -p "Generate custom? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        echo
-        read -p "Project Name: " PROJECT_NAME
-        PROJECT_URL="$(echo $PROJECT_NAME | tr '[:upper:]' '[:lower:]').local"
-        echo
-        read -p "Project URL: (${PROJECT_URL}) "
-        if [ $REPLY != '' ]; then PROJECT_URL=$REPLY; fi;
-        echo $PROJECT_URL
-        # create custom .env file
-        # > ../.env
-        # echo "PROJECT_NAME=${PROJECT_NAME}" >> ../.env
-        # echo "PROJECT_URL=${PROJECT_URL}" >> ../.env
+        # Default Name
+        PROJECT_NAME="project"
 
+        echo
+        read -p "Project Name: ( $PROJECT_NAME ) "
+        echo
+        if [[ $REPLY != '' ]]; then
+            PROJECT_NAME=$REPLY
+        fi
+
+        # Default MODx Version
+        MODX_VERSION='2.7.1'
+        echo
+        read -p "MODx Version: ( ${MODX_VERSION} ) "
+        echo
+        if [[ $REPLY != '' ]]; then
+            MODX_VERSION=$REPLY
+        fi
+
+
+        # ? maybe configure URL and ALIAS too?
+        # echo
+        # echo -e "\e[3mCurrently the TLD will always be .local\e[0m"
+        # read -p "Project URL: ( ${PROJECT_URL} ) "
+        # if [[ $REPLY != '' ]]; then
+        #     PROJECT_URL="${REPLY}.local"
+        # fi
+        # echo
+        # echo
+        # read -p "Project aliases: ( ${PROJECT_ALIASES} ) "
+        # if [[ $REPLY != '' ]]; then
+        #     PROJECT_ALIASES=$REPLY;
+        # fi
+        # echo
+
+        # Generates URL automatically at $project_name.local
+        # Generates ALIAS automatically at %w(www.$project_name.local)
+        PROJECT_URL="$(echo $PROJECT_NAME | tr '[:upper:]' '[:lower:]').local"
+        PROJECT_ALIASES="%w(www.${PROJECT_URL})"
+
+        # create custom .env file
+        > ../.env
+        echo "# Project Name and URLs" >> ../.env
+        echo "PROJECT_NAME='${PROJECT_NAME}'" >> ../.env
+        echo "PROJECT_URL='${PROJECT_URL}'" >> ../.env
+        echo "PROJECT_ALIASES='${PROJECT_ALIASES}'" >> ../.env
+        echo "" >> ../.env
+        echo "# TECHNOLOGIES" >> ../.env
+        echo "MODX_VERSION='${MODX_VERSION}'" >> ../.env
+        echo
+        echo "There is a .env file now in your projects root folder"
+        echo
     else
         echo -e "${ORANGE}Copying the sample-file to '../.env'"
         echo
